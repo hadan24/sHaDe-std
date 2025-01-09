@@ -5,7 +5,7 @@ structures in C++! The goals are to:
 * reacquaint myself with C++,
 * understand these standard concepts at a deeper level,
 * learn about their implementations and alternative approaches,
-* use this as an outlet to read about and test optimization techniques.
+* use this as an outlet to learn optimization techniques and Visual Studio.
 
 This code is not meant to be used by others and will not be maintained with
 that in mind.
