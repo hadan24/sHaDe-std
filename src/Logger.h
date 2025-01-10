@@ -9,8 +9,9 @@ enum LogLevel {
 
 class Logger {
 private:
-    LogLevel lvl = Error;
+    LogLevel lvl;
 public:
+    Logger();
     Logger(LogLevel init);
 
     void set_level(LogLevel newLevel);
