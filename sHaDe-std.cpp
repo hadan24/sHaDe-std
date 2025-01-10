@@ -2,10 +2,29 @@
 //
 
 #include <iostream>
+#include "src/Logger.h"
+
+void logger_test();
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    logger_test();
+}
+
+void logger_test() {
+    Logger l(None);
+
+    for (int i = Error; i <= Trace+1; i++) {
+        l.print_level();
+
+        l.log_err("Err msg");
+        l.log_warn("Warn msg");
+        l.log_debug("Debug msg");
+        l.log_trace("Trace msg");
+        std::cout << std::endl;
+
+        l.set_level(static_cast<LogLevel>(i));
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

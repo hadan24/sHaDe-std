@@ -144,6 +144,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sHaDe-std.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Logger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
