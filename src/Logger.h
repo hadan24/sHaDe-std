@@ -1,5 +1,10 @@
 #pragma once
-enum LogLevel {
+/*
+    I quickly realized this is terrible / impractical. I will keep this for
+    history purposes but this probably won't be used until it's replaced.
+*/
+enum LogLevel
+{
     None = 0,
     Error,
     Warn,
@@ -7,7 +12,8 @@ enum LogLevel {
     Trace
 };
 
-class Logger {
+class Logger
+{
 private:
     LogLevel lvl;
 public:
@@ -22,3 +28,5 @@ public:
     void log_debug(const char* msg) const;
     void log_trace(const char* msg) const;
 };
+
+void logger_test();
