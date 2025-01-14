@@ -1,4 +1,5 @@
 #include <iostream>
+#include "src/Array.h"
 
 int main()
 {
