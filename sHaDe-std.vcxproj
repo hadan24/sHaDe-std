@@ -145,10 +145,12 @@
   <ItemGroup>
     <ClCompile Include="sHaDe-std.cpp" />
     <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Array.h" />
     <ClInclude Include="src\Logger.h" />
+    <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

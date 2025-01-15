@@ -9,12 +9,35 @@ template<typename T, size_t S>
 class Array
 {
 public:
+    Array() { std::cerr << "Created array" << std::endl; }
+    ~Array() { std::cerr << "Destroyed array" << std::endl; }
+
+    Array(Array<T, S>& const src) {
+        for (size_t i = 0; i < S; i++)
+            m_data[i] = src.m_data[i];  // calls potential copy constructors
+        std::cerr << "Copied array" << std::endl;
+    }
+
+    /*
+    print()
+    fill()
+    empty()
+    swap()
+    operator=
+    cmp operators
+    iterators
+    front & back???
+    make m_data public for aggregate initialization???
+
+    add bounds checking
+    */
+
     constexpr size_t size() const { return S; }
     T* data() { return m_data; }
     const T* data() const { return m_data; }
 
-    T& operator[] (size_t i) { return m_data[i]; }
-    const T& operator[] (size_t i) const { return m_data[i]; }
+    T& operator[] (size_t const i) { return m_data[i]; }
+    const T& operator[] (size_t const i) const { return m_data[i]; }
 
 private:
     T m_data[S];
