@@ -11,7 +11,7 @@ class Array
 public:
     Array() { std::cerr << "Created array" << std::endl; }
     ~Array() { std::cerr << "Destroyed array" << std::endl; }
-
+    
     Array(Array<T, S>& const src) {
         for (size_t i = 0; i < S; i++)
             m_data[i] = src.m_data[i];  // calls potential copy constructors
@@ -26,8 +26,12 @@ public:
     operator=
     cmp operators
     iterators
+    filter, sort, map
+    rename size to len, use size for num bytes
+    constructor that takes ptr (replacement for aggregate init?)
+        make m_data public for aggregate initialization???
     front & back???
-    make m_data public for aggregate initialization???
+    split(), reverse() ???
 
     add bounds checking
     */
