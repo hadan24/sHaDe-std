@@ -5,23 +5,36 @@
 
 int main()
 {
-    Array<std::string, 5> a;
+    using namespace std;
+
+    Array<string, 5> a;
     a[0] = "hi";
     a[4] = "poopoo";
     a[2] = "420";
     a[1] = "69";
     int i = 20;
 
+    cout << "\n";
     {
         Timer timer;
-        Array<std::string, 5> b(a);
+        Array<string, 5> b(a);
+    }
+    cout << "\n";
+    {
+        Array<string, 5> c("hi");
+        c.print();
+
+        Array<string, 5> d("301");
+        d.print();
+
+        c.swap(d);
+        c.print();
+        d.print();
     }
 
-    std::cout << "\n";
-    for (int i = 0; i < a.size(); i++) {
-        std::cout << a[i] << ", ";
-    }
-    std::cout << std::endl;
+    cout << "\n";
+    a.print();
+    cout << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
