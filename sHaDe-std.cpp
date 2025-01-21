@@ -49,6 +49,7 @@ int main()
 
         cout << (x == y) << " " << (x <= y) << " " << (x >= y)
             << " " << (x != y) << " " << (x < y) << " " << (x > y) << endl;
+        cout << sizeof(int) << " vs. " << x.size() << " vs. " << sizeof(x) << endl;
     }
 
     cout << "\n";
