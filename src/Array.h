@@ -24,8 +24,6 @@ public:
     }
 
     /*
-    operator=
-    cmp operators
     iterators
     filter, sort, map, slice/take
     rename size to len, use size for num bytes
@@ -50,12 +48,10 @@ public:
         }
         std::cout << "]" << std::endl;
     }
-
     void fill(const T& item) {
         for (size_t i = 0; i < S; i++)
             m_data[i] = item;
     }
-
     void swap(Array<T, S>& other) {
         if (&other == this) return;
 
@@ -69,6 +65,43 @@ public:
 
     T& operator[] (const size_t i) { return m_data[i]; }
     const T& operator[] (const size_t i) const { return m_data[i]; }
+    const bool operator== (const Array<T, S>& other) const {
+        size_t i = 0;
+        while (i < S) {
+            if (m_data[i] != other.m_data[i])
+                return false;
+            i++;
+        }
+        return true;
+    }
+    const bool operator<= (const Array<T, S>& other) const {
+        size_t i = 0;
+        while (i < S) {
+            if (m_data[i] > other.m_data[i])
+                return false;
+            i++;
+        }
+        return true;
+    }
+    const bool operator>= (const Array<T, S>& other) const {
+        size_t i = 0;
+        while (i < S) {
+            if (m_data[i] < other.m_data[i])
+                return false;
+            i++;
+        }
+        return true;
+    }
+    const bool operator!= (const Array<T, S>& other) const {
+        return !( (*this) == other );
+    }
+    const bool operator< (const Array<T, S>& other) const {
+        return other >= (*this);
+    }
+    const bool operator> (const Array<T, S>& other) const {
+        return other <= (*this);
+    }
+    
 
 private:
     T m_data[S];

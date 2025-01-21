@@ -18,6 +18,7 @@ int main()
     {
         Timer timer;
         Array<string, 5> b(a);
+        cout << (b == a) << endl;
     }
     cout << "\n";
     {
@@ -30,6 +31,24 @@ int main()
         c.swap(d);
         c.print();
         d.print();
+        bool c_eq_d = c == d;
+        c_eq_d = !c_eq_d;
+        cout << c_eq_d << endl;
+    }
+    cout << "\n";
+    {
+        Array<int, 3> x;
+        x[0] = 1;
+        x[1] = 2;
+        x[2] = 3;
+
+        Array<int, 3> y;
+        y[0] = 2;
+        y[1] = 3;
+        y[2] = 4;
+
+        cout << (x == y) << " " << (x <= y) << " " << (x >= y)
+            << " " << (x != y) << " " << (x < y) << " " << (x > y) << endl;
     }
 
     cout << "\n";
