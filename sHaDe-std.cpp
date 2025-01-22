@@ -2,59 +2,18 @@
 #include "src/Timer.h"
 #include "src/Array.h"
 #include <string>
+#include <array>
 
 int main()
 {
     using namespace std;
 
-    Array<string, 5> a;
-    a[0] = "hi";
-    a[4] = "poopoo";
-    a[2] = "420";
-    a[1] = "69";
-    int i = 20;
+    int raw[3] = {1, 2, 3};
+    Array<int, 3> woo(raw);
 
-    cout << "\n";
-    {
-        Timer timer;
-        Array<string, 5> b(a);
-        cout << (b == a) << endl;
-    }
-    cout << "\n";
-    {
-        Array<string, 5> c("hi");
-        c.print();
-
-        Array<string, 5> d("301");
-        d.print();
-
-        c.swap(d);
-        c.print();
-        d.print();
-        bool c_eq_d = c == d;
-        c_eq_d = !c_eq_d;
-        cout << c_eq_d << endl;
-    }
-    cout << "\n";
-    {
-        Array<int, 3> x;
-        x[0] = 1;
-        x[1] = 2;
-        x[2] = 3;
-
-        Array<int, 3> y;
-        y[0] = 2;
-        y[1] = 3;
-        y[2] = 4;
-
-        cout << (x == y) << " " << (x <= y) << " " << (x >= y)
-            << " " << (x != y) << " " << (x < y) << " " << (x > y) << endl;
-        cout << sizeof(int) << " vs. " << x.size() << " vs. " << sizeof(x) << endl;
-    }
-
-    cout << "\n";
-    a.print();
-    cout << endl;
+    woo.print();
+    cout << "front: " << woo.front() << " back: " << woo.back() << endl;
+    woo[10];
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

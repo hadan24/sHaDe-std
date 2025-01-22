@@ -9,11 +9,19 @@ template<typename T, size_t L>
 class Array
 {
 public:
-    Array() { std::cerr << "Created array" << std::endl; }
+    Array() { std::cerr << "Created empty array" << std::endl; }
     Array(const T& item)
     {
         fill(item);
         std::cerr << "Created & filled array" << std::endl;
+    }
+    Array(const T* arr) {
+        // unfortunately necessary replacement for aggregate initialization :(
+        // agg init requires no user-made constructors or non-public data members
+        // (impossible here when I'd like to see when objs are created/destroyed)
+        for (size_t i = 0; i < L; i++)
+            m_data[i] = arr[i];
+        std::cerr << "Created array from pointer" << std::endl;
     }
     ~Array() { std::cerr << "Destroyed array" << std::endl; }
     
@@ -26,12 +34,7 @@ public:
     /*
     iterators
     filter, sort, map, slice/take
-    constructor that takes ptr (replacement for aggregate init?)
-        make m_data public for aggregate initialization???
-    front & back???
     split(), reverse() ???
-
-    add bounds checking
     */
 
     constexpr size_t len() const { return L; }
@@ -63,8 +66,29 @@ public:
         }
     }
 
-    T& operator[] (const size_t i) { return m_data[i]; }
-    const T& operator[] (const size_t i) const { return m_data[i]; }
+    T& front() { return m_data[0]; }
+    const T& front() const { return m_data[0]; }
+    T& back() { return m_data[L-1]; }
+    const T& back() const { return m_data[L-1]; }
+
+    T& operator[] (const size_t i) {
+        if (i >= L) {
+            std::cerr << "Index " << i << " out of bounds "
+                << "(len = " << L << ")"
+                << std::endl;
+            return m_data[L-1];
+        }
+        return m_data[i];
+    }
+    const T& operator[] (const size_t i) const {
+        if (i >= L) {
+            std::cerr << "Index " << i << " out of bounds "
+                << "(len = " << L << ")"
+                << std::endl;
+            return m_data[L-1];
+        }
+        return m_data[i];
+    }
     const bool operator== (const Array<T, L>& other) const {
         size_t i = 0;
         while (i < L) {
