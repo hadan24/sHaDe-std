@@ -8,12 +8,14 @@ int main()
 {
     using namespace std;
 
-    int raw[3] = {1, 2, 3};
-    Array<int, 3> woo(raw);
+    const int len = 3;
+    int raw[len] = {1, 2, 3};
+    Array<int, len> woo(raw);
 
     woo.print();
     cout << "front: " << woo.front() << " back: " << woo.back() << endl;
     woo[10];
+    cout << "size: " << woo.size() << " bytes (" << sizeof(int) << "*" << len << ")" << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

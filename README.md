@@ -9,3 +9,6 @@ structures in C++! The goals are to:
 
 This code is not meant to be used by others and will not be maintained with
 that in mind.
+
+The actual source code, templates, etc are in the `src` folder,
+while `sHaDe-std.cpp` contains the `main` function for quick and dirty testing.
