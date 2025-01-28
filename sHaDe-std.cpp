@@ -16,6 +16,14 @@ int main()
     cout << "front: " << woo.front() << " back: " << woo.back() << endl;
     woo[10];
     cout << "size: " << woo.size() << " bytes (" << sizeof(int) << "*" << len << ")" << endl;
+
+    Array<int, len> mov(std::move(woo));
+    //woo.print();
+    mov.print();
+
+    woo = std::move(mov);
+    woo.print();
+    mov.print();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

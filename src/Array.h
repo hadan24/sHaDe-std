@@ -23,13 +23,17 @@ public:
             m_data[i] = arr[i];
         std::cerr << "Created array from pointer" << std::endl;
     }
-    ~Array() { std::cerr << "Destroyed array" << std::endl; }
-    
     Array(const Array<T, L>& src) {
         for (size_t i = 0; i < L; i++)
             m_data[i] = src.m_data[i];  // calls potential copy constructors
         std::cerr << "Copied array" << std::endl;
     }
+    Array(Array<T, L>&& src) {
+        memcpy(m_data, src.m_data, this->size());
+        memset(src.m_data, NULL, src.size());
+        std::cerr << "Moved array" << std::endl;
+    }
+    ~Array() { std::cerr << "Destroyed array" << std::endl; }
 
     /*
     iterators
@@ -88,6 +92,14 @@ public:
             return m_data[L-1];
         }
         return m_data[i];
+    }
+    Array<T, L>& operator= (Array<T,L>&& src) {
+        if (this != &src) {
+            memcpy(m_data, src.m_data, this->size());
+            memset(src.m_data, NULL, src.size());
+            std::cerr << "Moved array" << std::endl;
+        }
+        return *this;
     }
     const bool operator== (const Array<T, L>& other) const {
         size_t i = 0;
