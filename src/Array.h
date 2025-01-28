@@ -93,17 +93,6 @@ public:
         }
         return m_data[i];
     }
-    Array<T, L>& operator= (Array<T,L>&& src) {
-        if (this != &src) {
-            // how to properly delete current data before moving src into here???
-            // like if T were ptrs to heap data, how do I properly detect and
-            //  delete those heap objects before moving?
-            memcpy(m_data, src.m_data, this->size());
-            memset(src.m_data, NULL, src.size());
-            std::cerr << "Moved array" << std::endl;
-        }
-        return *this;
-    }
     const bool operator== (const Array<T, L>& other) const {
         size_t i = 0;
         while (i < L) {

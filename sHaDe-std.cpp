@@ -20,10 +20,6 @@ int main()
     Array<int, len> mov(std::move(woo));
     //woo.print();
     mov.print();
-
-    woo = std::move(mov);
-    woo.print();
-    mov.print();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
