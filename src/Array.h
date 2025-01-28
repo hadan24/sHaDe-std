@@ -28,7 +28,7 @@ public:
             m_data[i] = src.m_data[i];  // calls potential copy constructors
         std::cerr << "Copied array" << std::endl;
     }
-    Array(Array<T, L>&& src) {
+    Array(Array<T, L>&& src) noexcept {
         memcpy(m_data, src.m_data, this->size());
         memset(src.m_data, NULL, src.size());
         std::cerr << "Moved array" << std::endl;
@@ -95,6 +95,9 @@ public:
     }
     Array<T, L>& operator= (Array<T,L>&& src) {
         if (this != &src) {
+            // how to properly delete current data before moving src into here???
+            // like if T were ptrs to heap data, how do I properly detect and
+            //  delete those heap objects before moving?
             memcpy(m_data, src.m_data, this->size());
             memset(src.m_data, NULL, src.size());
             std::cerr << "Moved array" << std::endl;
