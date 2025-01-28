@@ -8,18 +8,26 @@ int main()
 {
     using namespace std;
 
-    const int len = 3;
-    int raw[len] = {1, 2, 3};
-    Array<int, len> woo(raw);
+    Array<int, 3> woo;
+    woo[0] = 42;
+    woo[1] = 69;
+    woo[2] = 420;
+    cout << "Iterator testing!\n" << endl;
 
-    woo.print();
-    cout << "front: " << woo.front() << " back: " << woo.back() << endl;
-    woo[10];
-    cout << "size: " << woo.size() << " bytes (" << sizeof(int) << "*" << len << ")" << endl;
+    cout << "No iters" << endl;
+    for (int i = 0; i < woo.len(); i++)
+        cout << woo[i] << ",";
+    cout << endl << endl;
 
-    Array<int, len> mov(std::move(woo));
-    //woo.print();
-    mov.print();
+    cout << "Range for loop" << endl;
+    for (int i : woo)
+        cout << i << ",";
+    cout << endl << endl;
+
+    cout << "Explicit iter" << endl;
+    for (Array<int, 3>::Iter it = woo.begin(); it != woo.end(); it++)
+        cout << *it << ",";
+    cout << endl << endl;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

@@ -3,12 +3,77 @@
 /*
     Everything done on 1/13/25 follows The Cherno's tutorial to start:
     https://youtu.be/TzB5ZeKQIHM?si=dz1Awx4u894hgcSN
+
+    The iterator code from 1/28/25 follows his tutorial as well:
+    https://youtu.be/F9eDv-YIOQ0?si=whoGh06QaVCZMorn
 */
+
+template<typename Arr>
+class ArrIter {
+public:
+    using T = typename Arr::ValueType;
+
+    ArrIter(T* ptr): m_ptr(ptr) {}
+
+    /* impl const vers */
+    ArrIter& operator++ () {
+        m_ptr++;
+        return *this;
+    }
+    ArrIter operator++ (int) {
+        ArrIter temp = *this;
+        m_ptr++;
+        return temp;
+    }
+    ArrIter& operator+= (size_t i) {
+        m_ptr += i;
+        return *this;
+    }
+    ArrIter& operator+ (size_t i) const {
+        ArrIter temp = *this;
+        temp += i;
+        return temp;
+    }
+    ArrIter& operator-- () {
+        m_ptr--;
+        return *this;
+    }
+    ArrIter operator-- (int) {
+        ArrIter temp = *this;
+        m_ptr--;
+        return temp;
+    }
+    ArrIter& operator-= (size_t i) {
+        m_ptr -= i;
+        return *this;
+    }
+    ArrIter& operator- (size_t i) const {
+        ArrIter temp = *this;
+        temp -= i;
+        return temp;
+    }
+    T& operator[] (size_t i) const { return m_ptr[i]; }
+    T& operator* () const { return *m_ptr; }
+    T* operator-> () const { return m_ptr; }
+
+    bool operator== (const ArrIter& other) const { return m_ptr == other.m_ptr; }
+    bool operator!= (const ArrIter& other) const { return m_ptr != other.m_ptr; }
+    bool operator<= (const ArrIter& other) const { return m_ptr <= other.m_ptr; }
+    bool operator>= (const ArrIter& other) const { return m_ptr >= other.m_ptr; }
+    bool operator< (const ArrIter& other) const { return m_ptr < other.m_ptr; }
+    bool operator> (const ArrIter& other) const { return m_ptr > other.m_ptr; }
+
+private:
+    T* m_ptr;
+};
 
 template<typename T, size_t L>
 class Array
 {
 public:
+    using Iter = ArrIter<Array<T,L>>;
+    using ValueType = T;
+
     Array() { std::cerr << "Created empty array" << std::endl; }
     Array(const T& item)
     {
@@ -36,16 +101,25 @@ public:
     ~Array() { std::cerr << "Destroyed array" << std::endl; }
 
     /*
-    iterators
     filter, sort, map, slice/take
     split(), reverse() ???
     */
 
+    /* DATA ACCESS */
     constexpr size_t len() const { return L; }
     constexpr size_t size() const { return sizeof(*this); }
     T* data() { return m_data; }
     const T* data() const { return m_data; }
 
+    T& front() { return m_data[0]; }
+    const T& front() const { return m_data[0]; }
+    T& back() { return m_data[L - 1]; }
+    const T& back() const { return m_data[L - 1]; }
+
+    Iter begin() { return Iter(m_data); }
+    Iter end() { return Iter(m_data + L); }
+
+    /* OTHER UTILITIES */
     void print() const {
         std::cout << "[";
         for (size_t i = 0; i < L; i++)
@@ -70,11 +144,7 @@ public:
         }
     }
 
-    T& front() { return m_data[0]; }
-    const T& front() const { return m_data[0]; }
-    T& back() { return m_data[L-1]; }
-    const T& back() const { return m_data[L-1]; }
-
+    /* OPERATORS */
     T& operator[] (const size_t i) {
         if (i >= L) {
             std::cerr << "Index " << i << " out of bounds "
@@ -93,7 +163,7 @@ public:
         }
         return m_data[i];
     }
-    const bool operator== (const Array<T, L>& other) const {
+    bool operator== (const Array<T, L>& other) const {
         size_t i = 0;
         while (i < L) {
             if (m_data[i] != other.m_data[i])
@@ -102,7 +172,7 @@ public:
         }
         return true;
     }
-    const bool operator<= (const Array<T, L>& other) const {
+    bool operator<= (const Array<T, L>& other) const {
         size_t i = 0;
         while (i < L) {
             if (m_data[i] > other.m_data[i])
@@ -111,7 +181,7 @@ public:
         }
         return true;
     }
-    const bool operator>= (const Array<T, L>& other) const {
+    bool operator>= (const Array<T, L>& other) const {
         size_t i = 0;
         while (i < L) {
             if (m_data[i] < other.m_data[i])
@@ -120,13 +190,13 @@ public:
         }
         return true;
     }
-    const bool operator!= (const Array<T, L>& other) const {
+    bool operator!= (const Array<T, L>& other) const {
         return !( (*this) == other );
     }
-    const bool operator< (const Array<T, L>& other) const {
+    bool operator< (const Array<T, L>& other) const {
         return other >= (*this);
     }
-    const bool operator> (const Array<T, L>& other) const {
+    bool operator> (const Array<T, L>& other) const {
         return other <= (*this);
     }
     
