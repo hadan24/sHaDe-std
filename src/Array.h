@@ -15,7 +15,6 @@ public:
 
     ArrIter(T* ptr): m_ptr(ptr) {}
 
-    /* impl const vers */
     ArrIter& operator++ () {
         m_ptr++;
         return *this;
@@ -67,12 +66,71 @@ private:
     T* m_ptr;
 };
 
+template<typename Arr>
+class ConstArrIter {
+public:
+    using T = typename Arr::ValueType;
+
+    ConstArrIter(const T* ptr): m_ptr(ptr) {}
+
+    ConstArrIter& operator++ () {
+        m_ptr++;
+        return *this;
+    }
+    ConstArrIter operator++ (int) {
+        ConstArrIter temp = *this;
+        m_ptr++;
+        return temp;
+    }
+    ConstArrIter& operator+= (size_t i) {
+        m_ptr += i;
+        return *this;
+    }
+    ConstArrIter& operator+ (size_t i) const {
+        ConstArrIter temp = *this;
+        temp += i;
+        return temp;
+    }
+    ConstArrIter& operator-- () {
+        m_ptr--;
+        return *this;
+    }
+    ConstArrIter operator-- (int) {
+        ConstArrIter temp = *this;
+        m_ptr--;
+        return temp;
+    }
+    ConstArrIter& operator-= (size_t i) {
+        m_ptr -= i;
+        return *this;
+    }
+    ConstArrIter& operator- (size_t i) const {
+        ConstArrIter temp = *this;
+        temp -= i;
+        return temp;
+    }
+    const T& operator[] (size_t i) const { return m_ptr[i]; }
+    const T& operator* () const { return *m_ptr; }
+    const T* operator-> () const { return m_ptr; }
+
+    bool operator== (const ConstArrIter& other) const { return m_ptr == other.m_ptr; }
+    bool operator!= (const ConstArrIter& other) const { return m_ptr != other.m_ptr; }
+    bool operator<= (const ConstArrIter& other) const { return m_ptr <= other.m_ptr; }
+    bool operator>= (const ConstArrIter& other) const { return m_ptr >= other.m_ptr; }
+    bool operator< (const ConstArrIter& other) const { return m_ptr < other.m_ptr; }
+    bool operator> (const ConstArrIter& other) const { return m_ptr > other.m_ptr; }
+
+private:
+    const T* m_ptr;
+};
+
 template<typename T, size_t L>
 class Array
 {
 public:
     using Iter = ArrIter<Array<T,L>>;
-    using ValueType = T;
+    using ConstIter = ConstArrIter<Array<T,L>>;
+    using ValueType = T;    // for iterator
 
     Array() { std::cerr << "Created empty array" << std::endl; }
     Array(const T& item)
@@ -118,6 +176,11 @@ public:
 
     Iter begin() { return Iter(m_data); }
     Iter end() { return Iter(m_data + L); }
+    ConstIter begin() const { return ConstIter(m_data); }
+    ConstIter const_begin() const { return ConstIter(m_data); }
+    ConstIter end() const { return ConstIter(m_data + L); }
+    ConstIter const_end() const { return ConstIter(m_data + L); }
+
 
     /* OTHER UTILITIES */
     void print() const {
