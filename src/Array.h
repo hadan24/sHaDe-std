@@ -158,10 +158,6 @@ public:
     }
     ~Array() { std::cerr << "Destroyed array" << std::endl; }
 
-    /*
-    filter, sort, map, slice/take
-    split(), reverse() ???
-    */
 
     /* DATA ACCESS */
     constexpr size_t len() const { return L; }
@@ -206,6 +202,15 @@ public:
             other.m_data[i] = temp;
         }
     }
+
+    /*
+    filter  ->  <algorithm> std::remove_if
+    map     ->  <algorithm> std::transform
+    reverse ->  <algorithm> std::reverse
+    sort    ->  yknow
+    slice   ->  <span> std::span
+    split   ->  do manually :/
+    */
 
     /* OPERATORS */
     T& operator[] (const size_t i) {
@@ -265,5 +270,5 @@ public:
     
 
 private:
-    T m_data[L];
+    T m_data[L] = {};
 };
