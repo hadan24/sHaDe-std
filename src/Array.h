@@ -140,8 +140,8 @@ public:
     }
     Array(const T* arr) {
         // unfortunately necessary replacement for aggregate initialization :(
-        // agg init requires no user-made constructors or non-public data members
-        // (impossible here when I'd like to see when objs are created/destroyed)
+        // agg init requires no user-made constructors nor non-public data
+        // (impossible here when I want to see when objs are created/destroyed)
         for (size_t i = 0; i < L; i++)
             m_data[i] = arr[i];
         std::cerr << "Created array from pointer" << std::endl;
@@ -211,6 +211,7 @@ public:
     slice   ->  <span> std::span
     split   ->  do manually :/
     */
+
 
     /* OPERATORS */
     T& operator[] (const size_t i) {
