@@ -47,6 +47,15 @@ public:
     }
 
     /* OTHER UTILITIES */
+    void print() const {    // requires T to overload `ostream <<` (change???)
+        std::cout << "[";
+        for (size_t i = 0; i < m_len; i++)
+        {
+            std::cout << m_data[i];
+            if (i < m_len - 1) std::cout << ",";
+        }
+        std::cout << "]" << std::endl;
+    }
     /*
     pop should call obj destructor
 

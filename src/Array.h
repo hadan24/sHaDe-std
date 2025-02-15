@@ -179,7 +179,7 @@ public:
 
 
     /* OTHER UTILITIES */
-    void print() const {
+    void print() const {    // requires T to overload `ostream <<` (change???)
         std::cout << "[";
         for (size_t i = 0; i < L; i++)
         {

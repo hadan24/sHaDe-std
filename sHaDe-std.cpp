@@ -14,15 +14,11 @@ int main()
 
         words.push("5");
         words.push("20");
-        for (int i = 0; i < words.len(); i++) {
-            cout << words[i] << ", ";
-        }
-        cout << endl;
+        words.print();
+
         words.pop();
-        for (int i = 0; i < words.len(); i++) {
-            cout << words[i] << ", ";
-        }
-        cout << endl;
+        words.print();
+
     }
     cout << "done done" << endl;
 }
