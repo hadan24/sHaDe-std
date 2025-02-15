@@ -105,6 +105,8 @@ private:
     size_t m_cap = 0;
 
     void realloc(size_t new_cap) {
+        std::cerr << "(Re)allocated vector. (Old cap = " << m_cap <<
+            " New cap = " << new_cap << ")" << std::endl;
         T* old = m_data;
 
         if (new_cap < m_len)
