@@ -148,12 +148,14 @@ public:
     }
     Array(const Array<T, L>& src) {
         for (size_t i = 0; i < L; i++)
-            m_data[i] = src.m_data[i];  // calls potential copy constructors
+            m_data[i] = src[i];  // calls potential copy constructors
         std::cerr << "Copied array" << std::endl;
     }
     Array(Array<T, L>&& src) noexcept {
-        memcpy(m_data, src.m_data, this->size());
-        memset(src.m_data, NULL, src.size());
+        for (size_t i = 0; i < L; i++) {
+            m_data[i] = std::move(src[i]);
+            src[i].~T();
+        }
         std::cerr << "Moved array" << std::endl;
     }
     ~Array() { std::cerr << "Destroyed array" << std::endl; }
