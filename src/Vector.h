@@ -41,10 +41,38 @@ public:
         m_len++;
         return;
     }
-    void pop() {    // also want a version that returns what was popped (std::optional??)
-        if (m_data)
-            m_len--;
+    void push(T&& item) {
+        if (!m_data)
+            this->realloc(INIT_SIZE);
+        else if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+
+        m_data[m_len] = std::move(item);
+        m_len++;
+        return;
     }
+    void pop() {    // also want a version that returns what was popped (std::optional??)
+        if (m_data) {
+            //m_data[m_len].~T(); // will cause double deletions???
+            m_len--;
+        }
+    }
+    template<typename... Args>  // explore variatic(?) templates, std::forward()
+    T& emplace(Args&&... args) {    // and arg expansion
+        if (!m_data)
+            this->realloc(INIT_SIZE);
+        else if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+
+        m_data[m_len] = T(std::forward<Args>(args)...);
+        return m_data[m_len++];
+    }
+    void clear() {
+        for (size_t i = 0; i < m_len; i++)
+            m_data[i].~T();
+        m_len = 0;
+    }
+
 
     /* OTHER UTILITIES */
     void print() const {    // requires T to overload `ostream <<` (change???)
@@ -57,13 +85,10 @@ public:
         std::cout << "]" << std::endl;
     }
     /*
-    pop should call obj destructor
-
     emplace (placement new()???)
     iterators
     insert (index & iter versions)
     erase (index & iter versions)
-    print
     fill
     swap
     empty
@@ -106,7 +131,7 @@ private:
 
     void realloc(size_t new_cap) {
         std::cerr << "(Re)allocated vector. (Old cap = " << m_cap <<
-            " New cap = " << new_cap << ")" << std::endl;
+            "; New cap = " << new_cap << ")" << std::endl;
         T* old = m_data;
 
         if (new_cap < m_len)

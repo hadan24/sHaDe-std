@@ -50,14 +50,15 @@ int main()
     //Vector<int> nums;
     {
         Vector<Point3D> words;
-
-        words.push(Point3D(5));
         cout << endl;
 
-        words.push(Point3D());
+        words.emplace(5.0f);
         cout << endl;
 
-        words.push(Point3D(69, 420, 3));
+        words.emplace();
+        cout << endl;
+
+        words.emplace(69.0f, 420.0f, 3.0f);
         cout << endl;
 
         words.print();
