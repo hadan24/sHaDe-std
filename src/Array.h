@@ -133,10 +133,19 @@ public:
     using ValueType = T;    // for iterator
 
     Array() { std::cerr << "Created empty array" << std::endl; }
-    Array(const T& item)
-    {
+    Array(const T& item) {
         fill(item);
-        std::cerr << "Created & filled array" << std::endl;
+        std::cerr << "Created & filled array from l-val" << std::endl;
+    }
+    Array(T&& item) {
+        for (size_t i = 0; i < L; i++)
+            m_data[i] = std::move(item);
+        std::cerr << "Created & filled array from r-val" << std::endl;
+    }
+    template<typename... Args>
+    Array(Args&&... args) {
+        for (size_t i = 0; i < L; i++)
+            new(&m_data[i]) T(std::forward<Args>(args)...);
     }
     Array(const T* arr) {
         // unfortunately necessary replacement for aggregate initialization :(
@@ -193,6 +202,10 @@ public:
     void fill(const T& item) {
         for (size_t i = 0; i < L; i++)
             m_data[i] = item;
+    }
+    void fill(T&& item) {
+        for (size_t i = 0; i < L; i++)
+            m_data[i] = std::move(item);
     }
     void swap(Array<T, L>& other) {
         if (&other == this) return;

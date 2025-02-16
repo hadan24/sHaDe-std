@@ -40,6 +40,10 @@ struct Point3D {
         out << " Point3D(" << pt.x << "," << pt.y << "," << pt.z << ") ";
         return out;
     }
+    friend std::ostream& operator << (std::ostream& out, const Point3D& pt) {
+        out << " Point3D(" << pt.x << "," << pt.y << "," << pt.z << ") ";
+        return out;
+    }
 };
 
 
@@ -47,27 +51,39 @@ int main()
 {
     using std::cout, std::endl, std::string;
 
-    //Vector<int> nums;
-    {
-        Vector<Point3D> words;
-        cout << endl;
+    const Array<Point3D, 3> con{};
+    cout << "Built con\n" << endl;
 
-        words.emplace(5.0f);
-        cout << endl;
+    Array<Point3D, 3> woo;
+    woo[0] = Point3D();
+    woo[1] = Point3D(69);
+    woo[2] = Point3D(4, 2, 0);
+    cout << "Built woo\n" << endl;
 
-        words.emplace();
-        cout << endl;
+    cout << "Iterator testing!\n" << endl;
 
-        words.emplace(69.0f, 420.0f, 3.0f);
-        cout << endl;
+    cout << "No iters" << endl;
+    for (int i = 0; i < woo.len(); i++)
+        cout << woo[i] << ",";
+    cout << endl;
+    for (int i = 0; i < con.len(); i++)
+        cout << con[i] << ",";
+    cout << endl << endl;
 
-        words.print();
-        
-        words.pop();
-        cout << endl;
-        
-        words.print();
-        cout << endl;
-    }
-    cout << "done done" << endl;
+    cout << "Range for loop" << endl;
+    for (Point3D& i : woo)
+        cout << i << ",";
+    cout << endl;
+    for (const Point3D& i : con)
+        cout << i << ",";
+    cout << endl << endl;
+
+    cout << "Explicit iter" << endl;
+    for (Array<Point3D, 3>::Iter it = woo.begin(); it != woo.end(); it++)
+        cout << *it << ",";
+    cout << endl;
+    
+    for (Array<Point3D, 3>::ConstIter it = con.begin(); it != con.end(); it++)
+        cout << *it << ",";
+    cout << endl << endl;
 }
