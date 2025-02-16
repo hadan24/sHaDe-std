@@ -15,10 +15,13 @@ class Vector
 {
 public:
     Vector() { std::cerr << "Created empty vec" << std::endl; }
-    ~Vector() {
-        delete[] m_data;
+    ~Vector() { // explore global operators new() and delete()
+        // call item destructors separately due to realloc w/ global new()
+        this->clear();
+        ::operator delete(m_data, m_cap * sizeof(T));
+
         m_data = nullptr;
-        m_len = m_cap = 0;
+        m_cap = 0;
         std::cerr << "Deleted vec" << std::endl;
     }
 
@@ -37,9 +40,7 @@ public:
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
-        m_data[m_len] = item;
-        m_len++;
-        return;
+        m_data[m_len++] = item;
     }
     void push(T&& item) {
         if (!m_data)
@@ -47,24 +48,21 @@ public:
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
-        m_data[m_len] = std::move(item);
-        m_len++;
-        return;
+        m_data[m_len++] = std::move(item);
     }
     void pop() {    // also want a version that returns what was popped (std::optional??)
-        if (m_data) {
-            //m_data[m_len].~T(); // will cause double deletions???
-            m_len--;
-        }
+        if (m_data)
+            m_data[m_len--].~T();
     }
-    template<typename... Args>  // explore variatic(?) templates, std::forward()
+    template<typename... Args>  // explore variatic(?) templates, forward()
     T& emplace(Args&&... args) {    // and arg expansion
         if (!m_data)
             this->realloc(INIT_SIZE);
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
-        m_data[m_len] = T(std::forward<Args>(args)...);
+        // constructs item literally in its place on the heap
+        new(&m_data[m_len]) T(std::forward<Args>(args)...); // explore placement new
         return m_data[m_len++];
     }
     void clear() {
@@ -85,7 +83,6 @@ public:
         std::cout << "]" << std::endl;
     }
     /*
-    emplace (placement new()???)
     iterators
     insert (index & iter versions)
     erase (index & iter versions)
@@ -129,20 +126,25 @@ private:
     size_t m_len = 0;
     size_t m_cap = 0;
 
-    void realloc(size_t new_cap) {
+    void realloc(size_t new_cap) {  // explore global operators new(), delete()
         std::cerr << "(Re)allocated vector. (Old cap = " << m_cap <<
             "; New cap = " << new_cap << ")" << std::endl;
+
         T* old = m_data;
-
+        size_t old_len = m_len;
         if (new_cap < m_len)
-            m_len = m_cap = new_cap;
-        else
-            m_cap = new_cap;
-        m_data = new T[m_cap];
+            m_len = new_cap;
 
+        // ONLY alloc memory, don't call constructors b/c moving in immediately
+        m_data = (T*) ::operator new(new_cap * sizeof(T));
         for (size_t i = 0; i < m_len; i++)
             m_data[i] = std::move(old[i]);
-        delete[] old;
-        return;
+
+        // call item destructors separately due to realloc w/ global new()
+        for (size_t i = 0; i < old_len; i++)
+            old[i].~T();
+        ::operator delete(old, m_cap * sizeof(T));
+
+        m_cap = new_cap;
     }
 };
