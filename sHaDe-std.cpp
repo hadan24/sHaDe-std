@@ -51,13 +51,15 @@ int main()
 {
     using std::cout, std::endl, std::string;
 
-    const Array<Point3D, 3> con{};
+    const Array<Point3D, 3> con{0,6,9};
     cout << "Built con\n" << endl;
 
-    Array<Point3D, 3> woo;
-    woo[0] = Point3D();
-    woo[1] = Point3D(69);
-    woo[2] = Point3D(4, 2, 0);
+    Array<Point3D, 3> woo {
+    Point3D(),
+    Point3D(69),
+    Point3D(4, 2, 0),
+    };
+    woo[0] = Point3D(24);
     cout << "Built woo\n" << endl;
 
     cout << "Iterator testing!\n" << endl;
