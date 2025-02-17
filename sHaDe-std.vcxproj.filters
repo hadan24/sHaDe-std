@@ -38,5 +38,8 @@
     <ClInclude Include="src\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ContiguousIter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

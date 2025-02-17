@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Array.h" />
+    <ClInclude Include="src\ContiguousIter.h" />
     <ClInclude Include="src\Logger.h" />
     <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\Vector.h" />

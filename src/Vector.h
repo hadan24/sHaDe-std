@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "ContiguousIter.h"
 
 /*
     Everything done on 2/15/25 follows The Cherno's tutorial to start:
@@ -50,10 +51,9 @@ public:
 
         m_data[m_len++] = std::move(item);
     }
-    void pop() {    // also want a version that returns what was popped (std::optional??)
-        if (m_data)
-            m_data[m_len--].~T();
-    }
+    // also want a version that returns what was popped (std::optional??)
+    void pop() { if (m_data) m_data[m_len--].~T(); }
+
     template<typename... Args>  // explore variatic(?) templates, forward()
     T& emplace(Args&&... args) {    // and arg expansion
         if (!m_data)

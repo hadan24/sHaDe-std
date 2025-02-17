@@ -1,128 +1,13 @@
 #pragma once
 #include <iostream>
+#include "ContiguousIter.h"
 /*
     Everything done on 1/13/25 follows The Cherno's tutorial to start:
     https://youtu.be/TzB5ZeKQIHM?si=dz1Awx4u894hgcSN
 
-    The iterator code from 1/28/25 follows his tutorial as well:
-    https://youtu.be/F9eDv-YIOQ0?si=whoGh06QaVCZMorn
+    Iterator code moved to ContiguousIter.h
 */
 
-template<typename Arr>
-class ArrIter {
-public:
-    using T = typename Arr::ValueType;
-
-    ArrIter(T* ptr): m_ptr(ptr) {}
-
-    ArrIter& operator++ () {
-        m_ptr++;
-        return *this;
-    }
-    ArrIter operator++ (int) {
-        ArrIter temp = *this;
-        m_ptr++;
-        return temp;
-    }
-    ArrIter& operator+= (size_t i) {
-        m_ptr += i;
-        return *this;
-    }
-    ArrIter& operator+ (size_t i) const {
-        ArrIter temp = *this;
-        temp += i;
-        return temp;
-    }
-    ArrIter& operator-- () {
-        m_ptr--;
-        return *this;
-    }
-    ArrIter operator-- (int) {
-        ArrIter temp = *this;
-        m_ptr--;
-        return temp;
-    }
-    ArrIter& operator-= (size_t i) {
-        m_ptr -= i;
-        return *this;
-    }
-    ArrIter& operator- (size_t i) const {
-        ArrIter temp = *this;
-        temp -= i;
-        return temp;
-    }
-    T& operator[] (size_t i) const { return m_ptr[i]; }
-    T& operator* () const { return *m_ptr; }
-    T* operator-> () const { return m_ptr; }
-
-    bool operator== (const ArrIter& other) const { return m_ptr == other.m_ptr; }
-    bool operator!= (const ArrIter& other) const { return m_ptr != other.m_ptr; }
-    bool operator<= (const ArrIter& other) const { return m_ptr <= other.m_ptr; }
-    bool operator>= (const ArrIter& other) const { return m_ptr >= other.m_ptr; }
-    bool operator< (const ArrIter& other) const { return m_ptr < other.m_ptr; }
-    bool operator> (const ArrIter& other) const { return m_ptr > other.m_ptr; }
-
-private:
-    T* m_ptr;
-};
-
-template<typename Arr>
-class ConstArrIter {
-public:
-    using T = typename Arr::ValueType;
-
-    ConstArrIter(const T* ptr): m_ptr(ptr) {}
-
-    ConstArrIter& operator++ () {
-        m_ptr++;
-        return *this;
-    }
-    ConstArrIter operator++ (int) {
-        ConstArrIter temp = *this;
-        m_ptr++;
-        return temp;
-    }
-    ConstArrIter& operator+= (size_t i) {
-        m_ptr += i;
-        return *this;
-    }
-    ConstArrIter& operator+ (size_t i) const {
-        ConstArrIter temp = *this;
-        temp += i;
-        return temp;
-    }
-    ConstArrIter& operator-- () {
-        m_ptr--;
-        return *this;
-    }
-    ConstArrIter operator-- (int) {
-        ConstArrIter temp = *this;
-        m_ptr--;
-        return temp;
-    }
-    ConstArrIter& operator-= (size_t i) {
-        m_ptr -= i;
-        return *this;
-    }
-    ConstArrIter& operator- (size_t i) const {
-        ConstArrIter temp = *this;
-        temp -= i;
-        return temp;
-    }
-    const T& operator[] (size_t i) const { return m_ptr[i]; }
-    const T& operator* () const { return *m_ptr; }
-    const T* operator-> () const { return m_ptr; }
-
-    bool operator== (const ConstArrIter& other) const { return m_ptr == other.m_ptr; }
-    bool operator!= (const ConstArrIter& other) const { return m_ptr != other.m_ptr; }
-    bool operator<= (const ConstArrIter& other) const { return m_ptr <= other.m_ptr; }
-    bool operator>= (const ConstArrIter& other) const { return m_ptr >= other.m_ptr; }
-    bool operator< (const ConstArrIter& other) const { return m_ptr < other.m_ptr; }
-    bool operator> (const ConstArrIter& other) const { return m_ptr > other.m_ptr; }
-
-private:
-    const T* m_ptr;
-};
 
 template<typename T, size_t L>
 class Array
