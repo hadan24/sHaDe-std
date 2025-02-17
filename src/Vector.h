@@ -52,7 +52,7 @@ public:
         m_data[m_len++] = std::move(item);
     }
     // also want a version that returns what was popped (std::optional??)
-    void pop() { if (m_data) m_data[m_len--].~T(); }
+    void pop() { if (m_data) m_data[--m_len].~T(); }
 
     template<typename... Args>  // explore variatic(?) templates, forward()
     T& emplace(Args&&... args) {    // and arg expansion
@@ -135,10 +135,13 @@ private:
         if (new_cap < m_len)
             m_len = new_cap;
 
-        // ONLY alloc memory, don't call constructors b/c moving in immediately
+        // ONLY alloc memory, don't call constructors w/ basic `new`
+        // b/c we're move constructing in that place immediately
         m_data = (T*) ::operator new(new_cap * sizeof(T));
         for (size_t i = 0; i < m_len; i++)
-            m_data[i] = std::move(old[i]);
+            new(&m_data[i]) T( std::move(old[i]) );
+            // can't just assign (=) here b/c that requires an object to exist
+            // at the new m_data[i] location to move into
 
         // call item destructors separately due to realloc w/ global new()
         for (size_t i = 0; i < old_len; i++)
