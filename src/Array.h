@@ -53,10 +53,6 @@ public:
         for (size_t i = 0; i < L; i++)
             m_data[i] = item;
     }
-    void fill(T&& item) {
-        for (size_t i = 0; i < L; i++)
-            m_data[i] = std::move(item);
-    }
     void swap(Array<T, L>& other) {
         if (&other == this) return;
 
