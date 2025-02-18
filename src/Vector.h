@@ -19,7 +19,10 @@ public:
     using ConstIter = ConstArrIter<Vector<T>>;
     using ValueType = T;    // for iterator
 
-    Vector() { std::cerr << "Created empty vec" << std::endl; }
+    Vector() {
+        this->realloc(INIT_SIZE);
+        std::cerr << "Created empty vec" << std::endl;
+    }
     ~Vector() { // explore global operators new() and delete()
         // call item destructors separately due to realloc w/ global new()
         this->clear();
@@ -30,13 +33,19 @@ public:
         std::cerr << "Deleted vec" << std::endl;
     }
 
-    /* MEMBER ACCESS */
+    /* DATA/MEMBER ACCESS */
     constexpr size_t len() const { return m_len; }
     constexpr size_t cap() const { return m_cap; }
     T* data() { return m_data; }
     const T* data() const { return m_data; }
     constexpr size_t data_size() const { return sizeof(T)*m_len; }
     constexpr size_t container_size() const { return sizeof(*this); }
+
+    bool empty() { return m_len <= 0; }
+    T& front() { return m_data[0]; }
+    const T& front() const { return m_data[0]; }
+    T& back() { return m_data[m_len - 1]; }
+    const T& back() const { return m_data[m_len - 1]; }
 
     /* DATA OPERATIONS */
     void push(const T& item) {
@@ -55,8 +64,6 @@ public:
 
         m_data[m_len++] = std::move(item);
     }
-    // also want a version that returns what was popped (std::optional??)
-    void pop() { if (m_data) m_data[--m_len].~T(); }
 
     template<typename... Args>  // explore variatic(?) templates, forward()
     T& emplace(Args&&... args) {    // and arg expansion
@@ -68,6 +75,13 @@ public:
         // constructs item literally in its place on the heap
         new(&m_data[m_len]) T(std::forward<Args>(args)...); // explore placement new
         return m_data[m_len++];
+    }
+    // also want a version that returns what was popped (std::optional??)
+    void pop() { if (m_data) m_data[--m_len].~T(); }
+
+    void fill(const T& item) {
+        for (size_t i = 0; i < m_len; i++)
+            m_data[i] = item;
     }
     void clear() {
         for (size_t i = 0; i < m_len; i++)
@@ -94,15 +108,11 @@ public:
         std::cout << "]" << std::endl;
     }
     /*
-    iterators
     insert (index & iter versions)
     erase (index & iter versions)
-    fill
     swap
-    empty
     reserve
     shrink_to_fit
-    front, back
     negative indices
     resize
     alternate constructors
