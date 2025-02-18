@@ -15,6 +15,10 @@ template<typename T>
 class Vector
 {
 public:
+    using Iter = ArrIter<Vector<T>>;
+    using ConstIter = ConstArrIter<Vector<T>>;
+    using ValueType = T;    // for iterator
+
     Vector() { std::cerr << "Created empty vec" << std::endl; }
     ~Vector() { // explore global operators new() and delete()
         // call item destructors separately due to realloc w/ global new()
@@ -70,6 +74,13 @@ public:
             m_data[i].~T();
         m_len = 0;
     }
+
+    Iter begin() { return Iter(m_data); }
+    Iter end() { return Iter(m_data + m_len); }
+    ConstIter begin() const { return ConstIter(m_data); }
+    ConstIter const_begin() const { return ConstIter(m_data); }
+    ConstIter end() const { return ConstIter(m_data + m_len); }
+    ConstIter const_end() const { return ConstIter(m_data + m_len); }
 
 
     /* OTHER UTILITIES */

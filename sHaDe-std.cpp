@@ -51,15 +51,13 @@ int main()
 {
     using std::cout, std::endl, std::string;
 
-    const Array<Point3D, 3> con{0,6,9};
+    const Vector<Point3D> con;
     cout << "Built con\n" << endl;
 
-    Array<Point3D, 3> woo {
-    Point3D(),
-    Point3D(69),
-    Point3D(4, 2, 0),
-    };
-    woo[0] = Point3D(24);
+    Vector<Point3D> woo;
+    woo.emplace();
+    woo.emplace(69);
+    woo.emplace(4,2,0);
     cout << "Built woo\n" << endl;
 
     cout << "Iterator testing!\n" << endl;
@@ -81,11 +79,11 @@ int main()
     cout << endl << endl;
 
     cout << "Explicit iter" << endl;
-    for (Array<Point3D, 3>::Iter it = woo.begin(); it != woo.end(); it++)
+    for (Vector<Point3D>::Iter it = woo.begin(); it != woo.end(); it++)
         cout << *it << ",";
     cout << endl;
     
-    for (Array<Point3D, 3>::ConstIter it = con.begin(); it != con.end(); it++)
+    for (Vector<Point3D>::ConstIter it = con.begin(); it != con.end(); it++)
         cout << *it << ",";
     cout << endl << endl;
 }
