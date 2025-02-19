@@ -17,7 +17,7 @@ public:
     using ConstIter = ConstArrIter<Array<T,L>>;
     using ValueType = T;    // for iterator
 
-    T m_data[L];
+    T m_data[L];    // public to allow the wonders of aggregate initialization
 
 
     /* DATA ACCESS */

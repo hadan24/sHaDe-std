@@ -10,6 +10,8 @@ class ArrIter {
 public:
     using T = typename Arr::ValueType;
 
+    T* m_ptr;   // DONT'T USE, for conversions between Const and non-Const
+
     ArrIter(T* ptr) : m_ptr(ptr) {}
 
     ArrIter& operator++ () {
@@ -65,15 +67,14 @@ public:
     bool operator>= (const T* other) const { return m_ptr >= other; }
     bool operator< (const T* other) const { return m_ptr < other; }
     bool operator> (const T* other) const { return m_ptr > other; }
-
-private:
-    T* m_ptr;
 };
 
 template<typename Arr>
 class ConstArrIter {
 public:
     using T = typename Arr::ValueType;
+
+    const T* m_ptr; // DONT'T USE, for conversions between Const and non-Const
 
     ConstArrIter(const T* ptr) : m_ptr(ptr) {}
 
@@ -130,7 +131,4 @@ public:
     bool operator>= (const T* other) const { return m_ptr >= other; }
     bool operator< (const T* other) const { return m_ptr < other; }
     bool operator> (const T* other) const { return m_ptr > other; }
-
-private:
-    const T* m_ptr;
 };
