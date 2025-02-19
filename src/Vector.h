@@ -80,37 +80,25 @@ public:
 
     // if `pos` is past the end of the vector, pushes `item` to the back
     Iter insert(size_t pos, const T& item) {
-        using std::move;
         if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
         if (pos > m_len)
             pos = m_len;
 
-        m_len++;
-        T old_pos_item = move(m_data[pos]);
+        for (size_t i = m_len++; i > pos; i--)
+            m_data[i] = std::move(m_data[i-1]);
         m_data[pos] = item;
-        for (size_t i = pos+1; i < m_len; i++) {
-            T curr_item( move(m_data[i]) );
-            m_data[i] = move(old_pos_item);
-            old_pos_item = move(curr_item);
-        }
         return Iter(m_data + pos);
     }
     Iter insert(size_t pos, T&& item) {
-        using std::move;
         if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
         if (pos > m_len)
             pos = m_len;
 
-        m_len++;
-        T old_pos_item = move(m_data[pos]);
-        m_data[pos] = move(item);
-        for (size_t i = pos + 1; i < m_len; i++) {
-            T curr_item(move(m_data[i]));
-            m_data[i] = move(old_pos_item);
-            old_pos_item = move(curr_item);
-        }
+        for (size_t i = m_len++; i > pos; i--)
+            m_data[i] = std::move(m_data[i-1]);
+        m_data[pos] = std::move(item);
         return Iter(m_data + pos);
     }
     template<typename... Args>
@@ -121,16 +109,12 @@ public:
         if (pos > m_len)
             pos = m_len;
 
-        m_len++;
-        T old_pos_item = move(m_data[pos]);
+        for (size_t i = m_len++; i > pos; i--)
+            m_data[i] = std::move(m_data[i-1]);
         new(&m_data[pos]) T(std::forward<Args>(args)...);
-        for (size_t i = pos + 1; i < m_len; i++) {
-            T curr_item(move(m_data[i]));
-            m_data[i] = move(old_pos_item);
-            old_pos_item = move(curr_item);
-        }
         return Iter(m_data + pos);
     }
+    
     Iter erase(size_t pos) {
         if (pos >= m_len) {
             std::cerr << "No item at index " << pos
@@ -143,7 +127,6 @@ public:
         for (size_t i = pos; i < m_len-1; i++)
             m_data[i] = std::move(m_data[i+1]);
         m_data[--m_len].~T();
-
         return Iter(m_data + pos);
     }
 
