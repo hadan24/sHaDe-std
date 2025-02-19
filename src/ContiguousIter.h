@@ -59,6 +59,13 @@ public:
     bool operator< (const ArrIter& other) const { return m_ptr < other.m_ptr; }
     bool operator> (const ArrIter& other) const { return m_ptr > other.m_ptr; }
 
+    bool operator== (const T* other) const { return m_ptr == other; }
+    bool operator!= (const T* other) const { return m_ptr != other; }
+    bool operator<= (const T* other) const { return m_ptr <= other; }
+    bool operator>= (const T* other) const { return m_ptr >= other; }
+    bool operator< (const T* other) const { return m_ptr < other; }
+    bool operator> (const T* other) const { return m_ptr > other; }
+
 private:
     T* m_ptr;
 };
@@ -116,6 +123,13 @@ public:
     bool operator>= (const ConstArrIter& other) const { return m_ptr >= other.m_ptr; }
     bool operator< (const ConstArrIter& other) const { return m_ptr < other.m_ptr; }
     bool operator> (const ConstArrIter& other) const { return m_ptr > other.m_ptr; }
+
+    bool operator== (const T* other) const { return m_ptr == other; }
+    bool operator!= (const T* other) const { return m_ptr != other; }
+    bool operator<= (const T* other) const { return m_ptr <= other; }
+    bool operator>= (const T* other) const { return m_ptr >= other; }
+    bool operator< (const T* other) const { return m_ptr < other; }
+    bool operator> (const T* other) const { return m_ptr > other; }
 
 private:
     const T* m_ptr;
