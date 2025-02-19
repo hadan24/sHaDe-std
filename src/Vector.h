@@ -64,7 +64,6 @@ public:
 
         m_data[m_len++] = std::move(item);
     }
-
     template<typename... Args>  // explore variatic(?) templates, forward()
     T& emplace(Args&&... args) {    // and arg expansion
         if (!m_data)
@@ -78,6 +77,75 @@ public:
     }
     // also want a version that returns what was popped (std::optional??)
     void pop() { if (m_data) m_data[--m_len].~T(); }
+
+    // if `pos` is past the end of the vector, pushes `item` to the back
+    Iter insert(size_t pos, const T& item) {
+        using std::move;
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+        if (pos > m_len)
+            pos = m_len;
+
+        m_len++;
+        T old_pos_item = move(m_data[pos]);
+        m_data[pos] = item;
+        for (size_t i = pos+1; i < m_len; i++) {
+            T curr_item( move(m_data[i]) );
+            m_data[i] = move(old_pos_item);
+            old_pos_item = move(curr_item);
+        }
+        return Iter(m_data + pos);
+    }
+    Iter insert(size_t pos, T&& item) {
+        using std::move;
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+        if (pos > m_len)
+            pos = m_len;
+
+        m_len++;
+        T old_pos_item = move(m_data[pos]);
+        m_data[pos] = move(item);
+        for (size_t i = pos + 1; i < m_len; i++) {
+            T curr_item(move(m_data[i]));
+            m_data[i] = move(old_pos_item);
+            old_pos_item = move(curr_item);
+        }
+        return Iter(m_data + pos);
+    }
+    template<typename... Args>
+    Iter insert(size_t pos, Args&&... args) {
+        using std::move;
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+        if (pos > m_len)
+            pos = m_len;
+
+        m_len++;
+        T old_pos_item = move(m_data[pos]);
+        new(&m_data[pos]) T(std::forward<Args>(args)...);
+        for (size_t i = pos + 1; i < m_len; i++) {
+            T curr_item(move(m_data[i]));
+            m_data[i] = move(old_pos_item);
+            old_pos_item = move(curr_item);
+        }
+        return Iter(m_data + pos);
+    }
+    Iter erase(size_t pos) {
+        if (pos >= m_len) {
+            std::cerr << "No item at index " << pos
+                << " (len = " << m_len << ").\n"
+                << "Nothing was erased."
+                << std::endl;
+            return this->end();
+        }
+
+        for (size_t i = pos; i < m_len-1; i++)
+            m_data[i] = std::move(m_data[i+1]);
+        m_data[--m_len].~T();
+
+        return Iter(m_data + pos);
+    }
 
     void fill(const T& item) {
         for (size_t i = 0; i < m_len; i++)
@@ -108,8 +176,8 @@ public:
         std::cout << "]" << std::endl;
     }
     /*
-    insert (index & iter versions)
-    erase (index & iter versions)
+    insert (iter versions)
+    erase (iter versions)
     swap
     reserve
     shrink_to_fit

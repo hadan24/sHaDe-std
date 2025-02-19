@@ -36,11 +36,7 @@ struct Point3D {
         std::cerr << "Move assigned point" << std::endl;
         return *this;
     }
-    friend std::ostream& operator << (std::ostream& out, Point3D& pt) {
-        out << " Point3D(" << pt.x << "," << pt.y << "," << pt.z << ") ";
-        return out;
-    }
-    friend std::ostream& operator << (std::ostream& out, const Point3D& pt) {
+    static friend std::ostream& operator<< (std::ostream& out, const Point3D& pt) {
         out << " Point3D(" << pt.x << "," << pt.y << "," << pt.z << ") ";
         return out;
     }
@@ -56,11 +52,15 @@ int main()
 
     Vector<Point3D> woo;
     woo.emplace();
-    woo.emplace(69);
-    woo.emplace(4,2,0);
+    woo.emplace(69.0f);
+    woo.emplace(4.0f,2.0f,0.0f);
+    woo.print();
     cout << "Built woo\n" << endl;
+    cout << *( woo.insert(2, 30.0f) ) << endl;
+    woo.print();
+    woo.erase(3);
 
-    cout << "Iterator testing!\n" << endl;
+    cout << "\nIterator testing!\n" << endl;
 
     cout << "No iters" << endl;
     for (int i = 0; i < woo.len(); i++)
