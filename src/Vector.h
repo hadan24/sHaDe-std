@@ -87,8 +87,20 @@ public:
 
         for (size_t i = m_len++; i > pos; i--)
             m_data[i] = std::move(m_data[i-1]);
-        m_data[pos] = item;
+        m_data[pos] = item; // copy assign into existing memory
+                    // obj should handle destroying old obj's allocations
         return Iter(m_data + pos);
+    }
+    Iter insert(ConstIter pos, const T& item) {
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+
+        Iter added(pos > this->end() ? this->const_end() : pos);
+        for (Iter it = this->end(); it > added; it--)
+            *it = std::move( *(it-1) );
+        *added = item;  // copy assign into existing memory
+        m_len++;    // obj should handle destroying old obj's allocations
+        return added;
     }
     Iter insert(size_t pos, T&& item) {
         if (m_len >= m_cap)
@@ -98,8 +110,20 @@ public:
 
         for (size_t i = m_len++; i > pos; i--)
             m_data[i] = std::move(m_data[i-1]);
-        m_data[pos] = std::move(item);
+        m_data[pos] = std::move(item);  // move assign into existing memory
+                        // obj should handle destroying old obj's allocations
         return Iter(m_data + pos);
+    }
+    Iter insert(ConstIter pos, T&& item) {
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+
+        Iter added(pos > this->end() ? this->const_end() : pos);
+        for (Iter it = this->end(); it > added; it--)
+            *it = std::move( *(it-1) );
+        *added = std::move(item);   // move assign into existing memory
+        m_len++;        // obj should handle destroying old obj's allocations
+        return added;
     }
     template<typename... Args>
     Iter insert(size_t pos, Args&&... args) {
@@ -111,10 +135,24 @@ public:
 
         for (size_t i = m_len++; i > pos; i--)
             m_data[i] = std::move(m_data[i-1]);
+        m_data[pos].~T();   // forward constructing new obj, must destroy old
         new(&m_data[pos]) T(std::forward<Args>(args)...);
         return Iter(m_data + pos);
     }
-    
+    template<typename... Args>
+    Iter insert(ConstIter pos, Args&&... args) {
+        if (m_len >= m_cap)
+            this->realloc(m_cap * GROW_FACTOR);
+
+        Iter added(pos > this->end() ? this->const_end() : pos);
+        for (Iter it = this->end(); it > added; it--)
+            *it = std::move( *(it-1) );
+        added->~T();    // forward constructing new obj, must destroy old
+        new(added.m_ptr) T(std::forward<Args>(args)...);
+        m_len++;
+        return added;
+    }
+
     Iter erase(size_t pos) {
         if (pos >= m_len) {
             std::cerr << "No item at index " << pos
@@ -128,6 +166,21 @@ public:
             m_data[i] = std::move(m_data[i+1]);
         m_data[--m_len].~T();
         return Iter(m_data + pos);
+    }
+    Iter erase(ConstIter pos) {
+        if (pos >= this->const_end()) {
+            std::cerr << "No item at given iter (" << pos.m_ptr-m_data << ") "
+                << "(len = " << m_len << ").\n" << "Nothing was erased."
+                << std::endl;
+            return this->end();
+        }
+
+        Iter it(pos);
+        for ( ; it < this->end()-1; it++)
+            *it = std::move( *(it+1) );
+        it->~T();
+        m_len--;
+        return Iter(pos);
     }
 
     void fill(const T& item) {
@@ -159,8 +212,6 @@ public:
         std::cout << "]" << std::endl;
     }
     /*
-    insert (iter versions)
-    erase (iter versions)
     swap
     reserve
     shrink_to_fit

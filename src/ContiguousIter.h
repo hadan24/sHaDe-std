@@ -6,6 +6,9 @@
 */
 
 template<typename Arr>
+class ConstArrIter;
+
+template<typename Arr>
 class ArrIter {
 public:
     using T = typename Arr::ValueType;
@@ -13,6 +16,7 @@ public:
     T* m_ptr;   // DONT'T USE, for conversions between Const and non-Const
 
     ArrIter(T* ptr) : m_ptr(ptr) {}
+    ArrIter(ConstArrIter<Arr> ptr) : m_ptr(const_cast<T*>(ptr.m_ptr)) {}
 
     ArrIter& operator++ () {
         m_ptr++;
@@ -27,7 +31,7 @@ public:
         m_ptr += i;
         return *this;
     }
-    ArrIter& operator+ (size_t i) const {
+    ArrIter operator+ (size_t i) const {
         ArrIter temp = *this;
         temp += i;
         return temp;
@@ -45,7 +49,7 @@ public:
         m_ptr -= i;
         return *this;
     }
-    ArrIter& operator- (size_t i) const {
+    ArrIter operator- (size_t i) const {
         ArrIter temp = *this;
         temp -= i;
         return temp;
@@ -77,6 +81,7 @@ public:
     const T* m_ptr; // DONT'T USE, for conversions between Const and non-Const
 
     ConstArrIter(const T* ptr) : m_ptr(ptr) {}
+    ConstArrIter(ArrIter<Arr> ptr) : m_ptr(const_cast<const T*>(ptr.m_ptr)) {}
 
     ConstArrIter& operator++ () {
         m_ptr++;
@@ -91,7 +96,7 @@ public:
         m_ptr += i;
         return *this;
     }
-    ConstArrIter& operator+ (size_t i) const {
+    ConstArrIter operator+ (size_t i) const {
         ConstArrIter temp = *this;
         temp += i;
         return temp;
@@ -109,7 +114,7 @@ public:
         m_ptr -= i;
         return *this;
     }
-    ConstArrIter& operator- (size_t i) const {
+    ConstArrIter operator- (size_t i) const {
         ConstArrIter temp = *this;
         temp -= i;
         return temp;

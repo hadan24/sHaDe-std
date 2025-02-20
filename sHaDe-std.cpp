@@ -51,14 +51,14 @@ int main()
     cout << "Built con\n" << endl;
 
     Vector<Point3D> woo;
-    woo.emplace();
+    woo.emplace();  
     woo.emplace(69.0f);
     woo.emplace(4.0f,2.0f,0.0f);
     woo.print();
     cout << "Built woo\n" << endl;
-    cout << *( woo.insert(2, 30.0f) ) << endl;
+    cout << *(woo.insert(woo.const_begin() + 2, 30.0f)) << endl;
     woo.print();
-    woo.erase(3);
+    woo.erase(woo.const_begin()+3);
 
     cout << "\nIterator testing!\n" << endl;
 
