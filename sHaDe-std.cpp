@@ -50,15 +50,26 @@ int main()
     const Vector<Point3D> con;
     cout << "Built con\n" << endl;
 
+    Vector<Point3D> swp;
+    swp.emplace();
+    swp.emplace(69.0f);
+    swp.emplace(4.0f, 2.0f, 0.0f);
+    cout << "Built swp\n" << endl;
+    cout << *(swp.insert(swp.const_begin() + 2, 30.0f)) << endl;
+    swp.print();
+    swp.erase(swp.const_begin() + 3);
+
+    cout << endl;
+
     Vector<Point3D> woo;
-    woo.emplace();  
-    woo.emplace(69.0f);
-    woo.emplace(4.0f,2.0f,0.0f);
+    woo.emplace(4.0f);
     woo.print();
     cout << "Built woo\n" << endl;
-    cout << *(woo.insert(woo.const_begin() + 2, 30.0f)) << endl;
+
+    woo.swap(swp);
     woo.print();
-    woo.erase(woo.const_begin()+3);
+    swp.print();
+    woo.resize(2);
 
     cout << "\nIterator testing!\n" << endl;
 

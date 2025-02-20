@@ -211,12 +211,49 @@ public:
         }
         std::cout << "]" << std::endl;
     }
+    void swap(Vector<T>& other) {
+        if (&other == this) return;
+
+        T* temp_ptr = m_data;
+        m_data = other.m_data;
+        other.m_data = temp_ptr;
+
+        size_t temp = m_len;
+        m_len = other.m_len;
+        other.m_len = temp;
+
+        temp = m_cap;
+        m_cap = other.m_cap;
+        other.m_cap = temp;
+    }
+    void reserve(size_t new_cap) {
+        if (new_cap <= m_cap) {
+            std::cerr << "Given capacity " << new_cap
+                << " is less than current capacity (" << m_cap 
+                << "). Use `shrink_to_fit` or `resize` instead" << std::endl;
+            return;
+        }
+        realloc(new_cap);
+    }
+    void shrink_to_fit() {
+        if (m_len == m_cap) return;
+        realloc(m_len);
+    }
+    void resize(size_t new_len) {
+        if (new_len == m_len) return;
+        if (new_len > m_len) {
+            if (new_len > m_cap)
+                realloc(m_cap * GROW_FACTOR);
+            for (size_t i = m_len; i < new_len; i++)
+                new(&m_data[i]) T();
+        }
+        else for (size_t i = new_len; i < m_len; i++)
+            m_data[i].~T();
+
+        m_len = new_len;
+    }
     /*
-    swap
-    reserve
-    shrink_to_fit
     negative indices
-    resize
     alternate constructors
     copy & move constructors
     comparison operators
