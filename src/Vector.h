@@ -20,13 +20,34 @@ public:
     using ValueType = T;    // for iterator
 
     /*
-    alternate constructors
     comparison operators
     */
 
     Vector() {
         this->realloc(INIT_SIZE);
         std::cerr << "Created empty vec" << std::endl;
+    }
+    Vector(size_t len, bool default_construct = false) {
+        this->realloc(len);
+        if (default_construct) {    // only reserves by default, must specify
+            m_len = len;            // to construct default objects
+            for (size_t i = 0; i < m_len; i++)
+                m_data[i] = T();
+        }
+    }
+    Vector(size_t len, const T& item) {
+        this->realloc(len);
+        m_len = len;
+        for (size_t i = 0; i < m_len; i++)
+            m_data[i] = item;
+    }
+    template<typename InputIter>
+    Vector(InputIter start, InputIter end) {
+        ptrdiff_t len = end - start;
+        this->realloc(len);
+        m_len = static_cast<size_t>(len);
+        for (size_t i = 0; i < m_len; i++)
+            m_data[i] = *(start + i);
     }
     Vector(const Vector<T>& other) {
         this->realloc(other.m_len);

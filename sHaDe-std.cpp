@@ -69,14 +69,18 @@ int main()
     cout << woo[-1] << endl;
     woo.resize(2);
 
-    const Vector<Point3D> con(std::move(swp));
+    Array<Point3D, 5> a = {Point3D(24), Point3D(3), Point3D(42), Point3D(), Point3D()};
+    const Vector<Point3D> con(a.begin(), a.end()-1);
     cout << "Built con\n" << endl;
 
     cout << "Woo (2 elements): ";
     woo.print();
 
-    cout << "Con (1 element): ";
+    cout << "Con (4 elements): ";
     con.print();
+
+    cout << "A (5 elements): ";
+    a.print();
 
     cout << endl << endl;
 }

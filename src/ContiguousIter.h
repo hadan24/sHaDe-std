@@ -23,36 +23,34 @@ public:
         return *this;
     }
     ArrIter operator++ (int) {
-        ArrIter temp = *this;
-        m_ptr++;
-        return temp;
+        return ArrIter(m_ptr++);
     }
     ArrIter& operator+= (size_t i) {
         m_ptr += i;
         return *this;
     }
     ArrIter operator+ (size_t i) const {
-        ArrIter temp = *this;
-        temp += i;
-        return temp;
+        return ArrIter(m_ptr + i);
+    }
+    ArrIter operator+ (const ArrIter& other) const {
+        return ArrIter(m_ptr + other.m_ptr);
     }
     ArrIter& operator-- () {
         m_ptr--;
         return *this;
     }
     ArrIter operator-- (int) {
-        ArrIter temp = *this;
-        m_ptr--;
-        return temp;
+        return ArrIter(m_ptr--);
     }
     ArrIter& operator-= (size_t i) {
         m_ptr -= i;
         return *this;
     }
     ArrIter operator- (size_t i) const {
-        ArrIter temp = *this;
-        temp -= i;
-        return temp;
+        return ArrIter(m_ptr - i);
+    }
+    ptrdiff_t operator- (const ArrIter& other) const {
+        return m_ptr - other.m_ptr;
     }
     T& operator[] (size_t i) const { return m_ptr[i]; }
     T& operator* () const { return *m_ptr; }
@@ -88,36 +86,34 @@ public:
         return *this;
     }
     ConstArrIter operator++ (int) {
-        ConstArrIter temp = *this;
-        m_ptr++;
-        return temp;
+        return ConstArrIter(m_ptr++);
     }
     ConstArrIter& operator+= (size_t i) {
         m_ptr += i;
         return *this;
     }
     ConstArrIter operator+ (size_t i) const {
-        ConstArrIter temp = *this;
-        temp += i;
-        return temp;
+        return ConstArrIter(m_ptr + i);
+    }
+    ConstArrIter operator+ (const ConstArrIter& other) const {
+        return ConstArrIter(m_ptr + other.m_ptr);
     }
     ConstArrIter& operator-- () {
         m_ptr--;
         return *this;
     }
     ConstArrIter operator-- (int) {
-        ConstArrIter temp = *this;
-        m_ptr--;
-        return temp;
+        return ConstArrIter(m_ptr--);
     }
     ConstArrIter& operator-= (size_t i) {
         m_ptr -= i;
         return *this;
     }
     ConstArrIter operator- (size_t i) const {
-        ConstArrIter temp = *this;
-        temp -= i;
-        return temp;
+        return ConstArrIter(m_ptr - i);
+    }
+    ptrdiff_t operator- (const ConstArrIter& other) const {
+        return m_ptr - other.m_ptr;
     }
     const T& operator[] (size_t i) const { return m_ptr[i]; }
     const T& operator* () const { return *m_ptr; }
