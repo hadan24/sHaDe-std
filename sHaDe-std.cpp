@@ -47,9 +47,6 @@ int main()
 {
     using std::cout, std::endl, std::string;
 
-    const Vector<Point3D> con;
-    cout << "Built con\n" << endl;
-
     Vector<Point3D> swp;
     swp.emplace();
     swp.emplace(69.0f);
@@ -69,32 +66,17 @@ int main()
     woo.swap(swp);
     woo.print();
     swp.print();
+    cout << woo[-1] << endl;
     woo.resize(2);
 
-    cout << "\nIterator testing!\n" << endl;
+    const Vector<Point3D> con(std::move(swp));
+    cout << "Built con\n" << endl;
 
-    cout << "No iters" << endl;
-    for (int i = 0; i < woo.len(); i++)
-        cout << woo[i] << ",";
-    cout << endl;
-    for (int i = 0; i < con.len(); i++)
-        cout << con[i] << ",";
-    cout << endl << endl;
+    cout << "Woo (2 elements): ";
+    woo.print();
 
-    cout << "Range for loop" << endl;
-    for (Point3D& i : woo)
-        cout << i << ",";
-    cout << endl;
-    for (const Point3D& i : con)
-        cout << i << ",";
-    cout << endl << endl;
+    cout << "Con (1 element): ";
+    con.print();
 
-    cout << "Explicit iter" << endl;
-    for (Vector<Point3D>::Iter it = woo.begin(); it != woo.end(); it++)
-        cout << *it << ",";
-    cout << endl;
-    
-    for (Vector<Point3D>::ConstIter it = con.begin(); it != con.end(); it++)
-        cout << *it << ",";
     cout << endl << endl;
 }

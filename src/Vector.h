@@ -19,9 +19,28 @@ public:
     using ConstIter = ConstArrIter<Vector<T>>;
     using ValueType = T;    // for iterator
 
+    /*
+    alternate constructors
+    comparison operators
+    */
+
     Vector() {
         this->realloc(INIT_SIZE);
         std::cerr << "Created empty vec" << std::endl;
+    }
+    Vector(const Vector<T>& other) {
+        this->realloc(other.m_len);
+        m_len = other.m_len;
+        for (size_t i = 0; i < m_len; i++)
+            m_data[i] = other.m_data[i];
+        std::cerr << "Copied vec" << std::endl;
+    }
+    Vector(Vector<T>&& other) noexcept
+        : m_data(other.m_data), m_len(other.m_len), m_cap(other.m_cap)
+    {
+        other.m_data = nullptr;
+        other.m_len = other.m_cap = 0;
+        std::cerr << "Moved vec" << std::endl;
     }
     ~Vector() { // explore global operators new() and delete()
         // call item destructors separately due to realloc w/ global new()
@@ -153,7 +172,7 @@ public:
         return added;
     }
 
-    Iter erase(size_t pos) {
+    Iter erase(const size_t pos) {
         if (pos >= m_len) {
             std::cerr << "No item at index " << pos
                 << " (len = " << m_len << ").\n"
@@ -252,32 +271,30 @@ public:
 
         m_len = new_len;
     }
-    /*
-    negative indices
-    alternate constructors
-    copy & move constructors
-    comparison operators
-    */
 
 
     /* OPERATORS */
-    T& operator[] (const size_t i) {
-        if (i >= m_len) {
+    T& operator[] (const int i) {   // assumes vec will never be big enough
+        if (i >= static_cast<int>(m_len)) { // for size_t's size to matter
             std::cerr << "Index " << i << " out of bounds "
                 << "(len = " << m_len << ")"
                 << std::endl;
             return m_data[m_len - 1];
         }
-        return m_data[i];
+        if (i < 0)
+            return m_data[m_len + i];
+        else return m_data[i];
     }
-    const T& operator[] (const size_t i) const {
-        if (i >= m_len) {
+    const T& operator[] (const int i) const {   // assumes vec will never be big
+        if (i >= static_cast<int>(m_len)) { // enough for size_t's size to matter
             std::cerr << "Index " << i << " out of bounds "
                 << "(len = " << m_len << ")"
                 << std::endl;
             return m_data[m_len - 1];
         }
-        return m_data[i];
+        if (i < 0)
+            return m_data[m_len + i];
+        else return m_data[i];
     }
 
 
