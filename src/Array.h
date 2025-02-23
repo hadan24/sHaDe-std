@@ -40,7 +40,7 @@ public:
 
 
     /* OTHER UTILITIES */
-    void print() const {    // requires T to overload `ostream <<` (change???)
+    void print() const {
         std::cout << "[";
         for (size_t i = 0; i < L; i++)
         {
@@ -56,14 +56,12 @@ public:
     void swap(Array<T, L>& other) {
         if (&other == this) return;
 
-        for (size_t i = 0; i < L; i++)
-        {
+        for (size_t i = 0; i < L; i++) {
             T temp = m_data[i];
             m_data[i] = other.m_data[i];
             other.m_data[i] = temp;
         }
     }
-
     /*
     filter  ->  <algorithm> std::remove_if
     map     ->  <algorithm> std::transform

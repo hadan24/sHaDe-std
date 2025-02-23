@@ -19,10 +19,6 @@ public:
     using ConstIter = ConstArrIter<Vector<T>>;
     using ValueType = T;    // for iterator
 
-    /*
-    comparison operators
-    */
-
     Vector() {
         this->realloc(INIT_SIZE);
         std::cerr << "Created empty vec" << std::endl;
@@ -63,7 +59,7 @@ public:
         other.m_len = other.m_cap = 0;
         std::cerr << "Moved vec" << std::endl;
     }
-    ~Vector() { // explore global operators new() and delete()
+    ~Vector() {
         // call item destructors separately due to realloc w/ global new()
         this->clear();
         ::operator delete(m_data, m_cap * sizeof(T));
@@ -88,35 +84,41 @@ public:
     const T& back() const { return m_data[m_len - 1]; }
 
     /* DATA OPERATIONS */
-    void push(const T& item) {
+    T& push(const T& item) {
         if (!m_data)
             this->realloc(INIT_SIZE);
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
-        m_data[m_len++] = item;
+        m_data[m_len] = item;
+        return m_data[m_len++];
     }
-    void push(T&& item) {
+    T& push(T&& item) {
         if (!m_data)
             this->realloc(INIT_SIZE);
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
-        m_data[m_len++] = std::move(item);
+        m_data[m_len] = std::move(item);
+        return m_data[m_len++];
     }
-    template<typename... Args>  // explore variatic(?) templates, forward()
-    T& emplace(Args&&... args) {    // and arg expansion
+    template<typename... Args>
+    T& emplace(Args&&... args) {
         if (!m_data)
             this->realloc(INIT_SIZE);
         else if (m_len >= m_cap)
             this->realloc(m_cap * GROW_FACTOR);
 
         // constructs item literally in its place on the heap
-        new(&m_data[m_len]) T(std::forward<Args>(args)...); // explore placement new
+        new(&m_data[m_len]) T(std::forward<Args>(args)...);
         return m_data[m_len++];
     }
-    // also want a version that returns what was popped (std::optional??)
-    void pop() { if (m_data) m_data[--m_len].~T(); }
+    void pop(T* out_popped = nullptr) {
+        if (!m_data) return;
+        if (out_popped) // copy, NOT move since obj is getting deleted
+            *out_popped = m_data[m_len - 1];
+        m_data[--m_len].~T();
+    }
 
     // if `pos` is past the end of the vector, pushes `item` to the back
     Iter insert(size_t pos, const T& item) {
@@ -242,7 +244,7 @@ public:
 
 
     /* OTHER UTILITIES */
-    void print() const {    // requires T to overload `ostream <<` (change???)
+    void print() const {
         std::cout << "[";
         for (size_t i = 0; i < m_len; i++)
         {
@@ -292,6 +294,14 @@ public:
 
         m_len = new_len;
     }
+    /*
+    filter  ->  <algorithm> std::remove_if
+    map     ->  <algorithm> std::transform
+    reverse ->  <algorithm> std::reverse
+    sort    ->  yknow
+    slice   ->  <span> std::span
+    split   ->  do manually :/
+    */
 
 
     /* OPERATORS */
@@ -318,13 +328,62 @@ public:
         else return m_data[i];
     }
 
+    bool operator== (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] != other.m_data[i])
+                return false;
+        return true;
+    }
+    bool operator<= (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] > other.m_data[i])
+                return false;
+        return true;
+    }
+    bool operator>= (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] < other.m_data[i])
+                return false;
+        return true;
+    }
+    bool operator!= (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] == other.m_data[i])
+                return false;
+        return true;
+    }
+    bool operator< (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] >= other.m_data[i])
+                return false;
+        return true;
+    }
+    bool operator> (const Vector<T>& other) const {
+        if (m_len != other.m_len) return false;
+
+        for (size_t i = 0; i < m_len; i++)
+            if (m_data[i] <= other.m_data[i])
+                return false;
+        return true;
+    }
+
 
 private:
     T* m_data = nullptr;
     size_t m_len = 0;
     size_t m_cap = 0;
 
-    void realloc(size_t new_cap) {  // explore global operators new(), delete()
+    void realloc(size_t new_cap) {
         std::cerr << "(Re)allocated vector. (Old cap = " << m_cap <<
             "; New cap = " << new_cap << ")" << std::endl;
 

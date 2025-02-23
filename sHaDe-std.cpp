@@ -67,7 +67,10 @@ int main()
     woo.print();
     swp.print();
     cout << woo[-1] << endl;
-    woo.resize(2);
+
+    Point3D popped;
+    woo.pop(&popped);
+    cout << popped << endl;
 
     Array<Point3D, 5> a = {Point3D(24), Point3D(3), Point3D(42), Point3D(), Point3D()};
     const Vector<Point3D> con(a.begin(), a.end()-1);
